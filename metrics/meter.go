@@ -182,11 +182,7 @@ func (m *StandardMeter) Rate15() float64 {
 func (m *StandardMeter) RateMean() float64 {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
-	elapsed := time.Since(m.startTime).Seconds()
-	if elapsed == 0 {
-		return float64(m.count)
-	}
-	return float64(m.count) / elapsed
+	return float64(m.count) / (1 + time.Since(m.startTime).Seconds())
 }
 
 // Snapshot returns a read-only copy of the meter.
